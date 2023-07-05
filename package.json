@@ -1,0 +1,19 @@
+{
+  "name": "movie-app",
+  "version": "1.0.0",
+  "description": "Aplicacion para explorar peliculas",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertocontardowirth/movie-app.git"
+  },
+  "author": "Roberto Contardo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robertocontardowirth/movie-app/issues"
+  },
+  "homepage": "https://github.com/robertocontardowirth/movie-app#readme"
+}
