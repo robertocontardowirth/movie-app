@@ -1,3 +1,6 @@
+let page = 1
+let infiniteScroll;
+
 searchFormBtn.addEventListener('click', () => {
     searchFormInput.value
     location.hash = '#search=' + searchFormInput.value
@@ -14,8 +17,14 @@ arrowBtn.addEventListener('click', () => {
 
 window.addEventListener('DOMContentLoaded', navigation, false)
 window.addEventListener('hashchange', navigation, false)
+window.addEventListener('scroll', infiniteScroll, {pasive: false})
 
 function navigation(){
+    if (infiniteScroll){
+        window.removeEventListener('scroll', infiniteScroll)
+        infiniteScroll = undefined
+    }
+
     if(location.hash.startsWith('#trends')){
         trendsPage()
     } else if(location.hash.startsWith('#search=')){
@@ -30,6 +39,10 @@ function navigation(){
 
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
+
+    if(infiniteScroll){
+        window.addEventListener('scroll', infiniteScroll, {pasive: false})
+    }
 }
 
 function homePage(){
@@ -143,4 +156,6 @@ function trendsPage(){
     headerCategoryTitle.innerHTML = 'Tendencias'
 
     getTrendingMovies()
+
+    infiniteScroll = getPaginatedTrendingMovies
 }

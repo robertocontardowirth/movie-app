@@ -8,8 +8,26 @@ const api = axios.create({
     }
 })
 
-function createMovies(movies, container){
-    container.innerHTML = ""
+const lazyLoader = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting){
+            const url = entry.target.getAttribute('data-img')
+            entry.target.setAttribute('src', url)
+        }
+    })
+});
+
+function createMovies(
+    movies,
+    container, 
+    {
+    lazyLoad = false,
+    clean = true
+    }
+){
+    if(clean){
+        container.innerHTML = ""
+    }
     movies.forEach(movie => {
         const movieContainer = document.createElement('div')
         movieContainer.classList.add('movie-container')
@@ -21,11 +39,16 @@ function createMovies(movies, container){
         movieImg.classList.add('movie-img')
         movieImg.setAttribute('alt', movie.title)
         movieImg.setAttribute(
-            'src', 
+            lazyLoad ? 'data-img' : 'src', 
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path)
+        movieImg.addEventListener('error', () => {
+            movieImg.setAttribute('src', 'https://dummyimage.com/300x400/CCC/fff')
+        })
+        if (lazyLoad){
+            lazyLoader.observe(movieImg)
+        }
 
         movieContainer.appendChild(movieImg)
-
         container.appendChild(movieContainer)
     });
 }
@@ -42,7 +65,7 @@ function createCategories(categories, container){
         categoryTitle.addEventListener('click', () => {
             location.hash = `#category=${category.id}-${category.name}`
         })
-        const categoryTitleText = document.createTextNode(category.name)
+        const categoryTitleText = document.createTextNode(decodeURI(category.name))
         
         categoryTitle.appendChild(categoryTitleText)
         categoryContainer.appendChild(categoryTitle)
@@ -55,7 +78,7 @@ async function getTrendingMoviesPreview(){
     const {data} = await api('trending/movie/day')
     const movies = data.results
 
-    createMovies(movies, trendingMoviesPreviewList)
+    createMovies(movies, trendingMoviesPreviewList, {lazyLoad: true, clean: true})
 }
 
 async function getMoviesByCategory(id){
@@ -67,7 +90,7 @@ async function getMoviesByCategory(id){
     })
     const movies = data.results
 
-    createMovies(movies, genericSection)
+    createMovies(movies, genericSection, {lazyLoad: true, clean: true})
 }
 
 async function getMoviesBySearch(query){
@@ -78,7 +101,7 @@ async function getMoviesBySearch(query){
     })
     const movies = data.results
 
-    createMovies(movies, genericSection)
+    createMovies(movies, genericSection, {lazyLoad: true, clean: true})
 }
 
 async function getCategoriesPreview(){
@@ -92,7 +115,37 @@ async function getTrendingMovies(){
     const {data} = await api('trending/movie/day')
     const movies = data.results
 
-    createMovies(movies, genericSection)
+    createMovies(movies, genericSection, {lazyLoad: true, clean: true})
+
+    /*const btnLoadMore = document.createElement('button')
+    btnLoadMore.classList.add('loadMore-btn')
+    btnLoadMore.innerText = 'Cargar más'
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)
+    genericSection.appendChild(btnLoadMore)*/
+}
+
+async function getPaginatedTrendingMovies(){
+    const {scrollTop, scrollHeight, clientHeight} = document.documentElement
+    const scrolledBottom = (scrollTop + clientHeight) >= (scrollHeight - 15)
+
+    if (scrolledBottom){
+        //e.target.classList.add('inactive')
+    
+        page++;
+        const {data} = await api('trending/movie/day', {
+            params: {
+                page: page,
+            }
+        })
+        const movies = data.results
+    
+        createMovies(movies, genericSection, { lazyLoad : true, clean : false})        
+    }
+    /*const btnLoadMore = document.createElement('button')
+    btnLoadMore.classList.add('loadMore-btn')
+    btnLoadMore.innerText = 'Cargar más'
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)
+    genericSection.appendChild(btnLoadMore)*/
 }
 
 async function getMovieById(id){
@@ -121,5 +174,5 @@ async function getRelatedMoviesId(id){
     const {data} = await api(`movie/${id}/similar`)
     const relatedMovies = data.results
 
-    createMovies(relatedMovies, relatedMoviesContainer)
+    createMovies(relatedMovies, relatedMoviesContainer, {lazyLoad: true, clean: true})
 }

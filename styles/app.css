@@ -25,7 +25,7 @@
   --darkBlue: #8EA2EA;
   --red: #F09D9D;
 
-  --font-family-titles: 'Dosis', sans-serif;
+  --font-family-titles: 'Courier Prime', sans-serif;
   --font-family-text: 'Red Hat Display', sans-serif;
   --font-weight-title1: 800;
   --font-weight-title2: 700;
@@ -111,10 +111,30 @@ button {
 
 .movie-container {
   cursor: pointer;
+  background: var(--purple-light-2);
+  border-radius: 8px;
 }
-
+.movie-container--loading {
+  background: var(--purple-light-2);
+  border-radius: 8px;
+  height: 225px;
+  min-height: 225px;
+  max-height: 225px;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  margin-bottom: 15px;
+  animation: loading-skeleton infinite 1.5s;
+}
+.movie-container--loading:nth-child(2) {
+  animation-delay: .2s;
+}
+.movie-container--loading:nth-child(3) {
+  animation-delay: .4s;
+}
 .movie-img {
   border-radius: 8px;
+  min-height:200px;
 }
 
 .categoriesPreview-list, .categories-list {
@@ -132,8 +152,8 @@ button {
 }
 
 .header-container--long {
-  background-image: url('https://pics.filmaffinity.com/Deadpool-777527803-large.jpg');
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 19.27%, rgba(0, 0, 0, 0) 29.17%), url(https://pics.filmaffinity.com/Deadpool-777527803-large.jpg);
+  background-image: url('https://dummyimage.com/300x400/CCC/fff');
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 19.27%, rgba(0, 0, 0, 0) 29.17%), url(https://dummyimage.com/300x400/CCC/fff);
   background-size: cover !important;
   height: 480px;
   position: fixed;
@@ -191,8 +211,7 @@ button {
 
 .trendingPreview-btn {
   border-radius: 8px;
-  height: 32px;
-  width: 72px;
+  padding:.5rem 1rem;
 }
 
 .trendingPreview-movieList {
@@ -222,6 +241,22 @@ button {
 /* Categories */
 .category-container {
   width: 45%;
+}
+
+.category-container--loading {
+  background: var(--purple-light-2);
+  border-radius: 8px;
+  height: 25px;
+  min-height: 25px;
+  max-height: 25px;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  margin-bottom: 15px;
+  animation: loading-skeleton infinite 1.5s;
+}
+.category-container--loading:nth-child(2) {
+  animation-delay: .2s;
 }
 
 .category-title {
@@ -347,6 +382,14 @@ button {
   min-height: 187.5px;
   max-height: 187.5px;
 }
+
+.loadMore-btn {
+  border-radius: 8px;
+  padding:.7rem 1rem;
+  display:block;
+  width:100%;
+  margin:1rem auto;
+}
   
 
 /* Footer */
@@ -364,4 +407,14 @@ footer {
 /* Navigation */
 .inactive {
   display: none;
+}
+
+/* Animations */
+@keyframes loading-skeleton {
+  0%, 100% {
+    opacity: 100%;
+  }
+  50% {
+    opacity: 0%;
+  }
 }
